@@ -3,6 +3,7 @@ import { HttpModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { ElasticsearchModule } from '@nestjs/elasticsearch'
 import { SearchService } from './search.service'
+import { CourseResponse } from './search.dto'
 
 describe('SearchService', () => {
   let service: SearchService
@@ -32,5 +33,17 @@ describe('SearchService', () => {
   it('ping reg cmu service', async () => {
     const res = await service.pingRegAPI()
     expect(res).toBeDefined()
+  })
+
+  it('try to search in elastic search', async () => {
+    const query = 'cal'
+    const size = 5
+    let result: CourseResponse[]
+
+    result = await service.search(query)
+    expect(result).toBeDefined()
+
+    result = await service.search(query, size)
+    expect(result.length).toBeLessThanOrEqual(size)
   })
 })

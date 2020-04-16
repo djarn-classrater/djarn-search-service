@@ -5,9 +5,11 @@ import {
   Logger,
 } from '@nestjs/common'
 import { ElasticsearchService } from '@nestjs/elasticsearch'
+import { ApiResponse } from '@elastic/elasticsearch'
 import * as _ from 'lodash'
 import * as fs from 'fs'
 import { retryAsync } from 'ts-retry'
+import { SearchResponse, CourseResponse } from './search.dto'
 
 @Injectable()
 export class SearchService implements OnApplicationBootstrap {
@@ -80,5 +82,18 @@ export class SearchService implements OnApplicationBootstrap {
   async pingRegAPI() {
     const { data } = await this.regClient.get('/').toPromise()
     return data
+  }
+
+  async search(query: string, size?: number): Promise<CourseResponse[]> {
+    const {
+      body,
+    }: ApiResponse<SearchResponse<CourseResponse>> = await this.esClient.search(
+      {
+        index: 'courses',
+        q: query,
+        size,
+      },
+    )
+    return body.hits.hits
   }
 }
