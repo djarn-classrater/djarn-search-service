@@ -4,7 +4,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { SearchModule } from './search/search.module'
 import { SearchController } from './search/search.controller'
-import { CourseModule } from './course/course.module';
+import { CourseModule } from './course/course.module'
 
 @Module({
   imports: [ConfigModule.forRoot(), SearchModule, CourseModule],

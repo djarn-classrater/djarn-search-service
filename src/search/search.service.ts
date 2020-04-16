@@ -31,7 +31,10 @@ export class SearchService implements OnApplicationBootstrap {
       try {
         courses = require('../../courses.json').data
       } catch {
-        this.logger.log('Downloading courses from reg cmu service...', 'InitialCoursesInES')
+        this.logger.log(
+          'Downloading courses from reg cmu service...',
+          'InitialCoursesInES',
+        )
         const { data } = await this.regClient.get('/v2/course').toPromise()
         courses = data
         fs.writeFileSync('courses.json', JSON.stringify({ data: courses }))
