@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { ConfigModule } from '@nestjs/config'
 import { HttpModule } from '@nestjs/common'
+import { ElasticsearchModule } from '@nestjs/elasticsearch'
 import { SearchController } from './search.controller'
 import { SearchService } from './search.service'
 
@@ -9,13 +10,17 @@ describe('Search Controller', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot(), HttpModule.register({
-        baseURL: process.env.REG_HOST,
-        auth: {
-          username: process.env.REG_USERNAME,
-          password: process.env.REG_PASSWORD,
-        }
-      })],
+      imports: [
+        ConfigModule.forRoot(),
+        HttpModule.register({
+          baseURL: process.env.REG_HOST,
+          auth: {
+            username: process.env.REG_USERNAME,
+            password: process.env.REG_PASSWORD,
+          },
+        }),
+        ElasticsearchModule.register({ node: 'http://localhost:9200' }),
+      ],
       controllers: [SearchController],
       providers: [SearchService],
     }).compile()
