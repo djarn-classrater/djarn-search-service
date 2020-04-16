@@ -29,11 +29,12 @@ export class SearchService implements OnApplicationBootstrap {
        */
       let courses: any[] | _.Dictionary<any>
       try {
-        courses = JSON.parse(fs.readFileSync('courses.json', 'utf8'))
+        courses = require('../../courses.json').data
       } catch {
+        this.logger.log('Downloading courses from reg cmu service...', 'InitialCoursesInES')
         const { data } = await this.regClient.get('/v2/course').toPromise()
         courses = data
-        fs.writeFileSync('courses.json', courses)
+        fs.writeFileSync('courses.json', JSON.stringify({ data: courses }))
       }
       courses = _.groupBy(courses, 'courseno')
       const countCourses = Object.keys(courses).length
