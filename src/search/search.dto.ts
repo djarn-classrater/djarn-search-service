@@ -25,3 +25,8 @@ export interface CourseResponse<T = RegCourse, C = MisCourse> {
     fromMis?: C
   }
 }
+
+export interface SearchPayload {
+  query: string
+  size: number
+}

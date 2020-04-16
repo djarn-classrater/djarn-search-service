@@ -8,6 +8,7 @@ import {
 } from '@nestjs/microservices'
 import { AppModule } from '../src/app.module'
 import { Observable } from 'rxjs'
+import { CourseResponse } from '../src/search/search.dto'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
@@ -55,6 +56,15 @@ describe('AppController (e2e)', () => {
 
     response.subscribe(data => {
       expect(data).toBeDefined()
+      done()
+    })
+  })
+
+  it('Try to search', done => {
+    const response: Observable<CourseResponse[]> = client.send('search.query', { query: 'cal', size: 5 })
+
+    response.subscribe(data => {
+      expect(data.length).toBeLessThanOrEqual(5)
       done()
     })
   })
