@@ -9,8 +9,8 @@ import { SearchService } from './search.service'
     HttpModule.register({
       baseURL: process.env.REG_HOST,
       auth: {
-        username: process.env.USERNAME,
-        password: process.env.PASSWORD,
+        username: process.env.REG_USERNAME,
+        password: process.env.REG_PASSWORD,
       }
     })
   ],
