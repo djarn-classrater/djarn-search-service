@@ -4,10 +4,8 @@ services:
     build:
       context: .
       dockerfile: dockerfile.dev
-    command: yarn test
+    command: yarn test:e2e
     restart: on-failure
-    ports:
-      - 5000:3000
     volumes:
       - ./:/usr/src/app
     depends_on: 
