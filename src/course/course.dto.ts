@@ -1,4 +1,4 @@
-export interface Course {
+export interface MisCourse {
   facultyName: string
   courseId: string
   courseName: string
