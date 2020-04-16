@@ -18,7 +18,7 @@ describe('SearchService', () => {
             password: process.env.REG_PASSWORD,
           },
         }),
-        ElasticsearchModule.register({ node: 'http://localhost:9200' }),
+        ElasticsearchModule.register({ node: 'http://es:9200' }),
       ],
       providers: [SearchService],
     }).compile()

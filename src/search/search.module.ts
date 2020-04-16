@@ -8,7 +8,7 @@ import { SearchService } from './search.service'
   imports: [
     ConfigModule.forRoot(),
     ElasticsearchModule.register({
-      node: 'http://localhost:9200',
+      node: 'http://es:9200',
     }),
     HttpModule.register({
       baseURL: process.env.REG_HOST,
