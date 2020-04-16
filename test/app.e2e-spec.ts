@@ -6,14 +6,14 @@ import {
   ClientProxy,
   MicroserviceOptions,
 } from '@nestjs/microservices'
-import { AppModule } from './../src/app.module'
+import { AppModule } from '../src/app.module'
 import { Observable } from 'rxjs'
 
 describe('AppController (e2e)', () => {
   let app: INestApplication
   let client: ClientProxy
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AppModule,
@@ -46,6 +46,15 @@ describe('AppController (e2e)', () => {
 
     response.subscribe(data => {
       expect(data).toBe('Hello World!')
+      done()
+    })
+  })
+
+  it('Ping search service', done => {
+    const response: Observable<object> = client.send('search.ping', {})
+
+    response.subscribe(data => {
+      expect(data).toBeDefined()
       done()
     })
   })
