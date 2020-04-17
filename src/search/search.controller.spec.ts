@@ -40,7 +40,7 @@ describe('Search Controller', () => {
   })
 
   it('try to search', async () => {
-    const res = await controller.search({query: '261361', size: 5})
+    const res = await controller.search({ query: '261361', size: 5 })
     res.forEach(course => {
       expect(course._source.fromMis).toBeDefined()
     })

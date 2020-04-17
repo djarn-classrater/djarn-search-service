@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import {
   Injectable,
   HttpService,
@@ -46,9 +47,63 @@ export class SearchService implements OnApplicationBootstrap {
       const countCourses = Object.keys(courses).length
 
       /**
+       * Create courses index
+       */
+      this.logger.log(
+        'Create courses index elastic search',
+        'InitialCoursesInES',
+      )
+      this.esClient.indices.create({
+        index: 'courses',
+        body: {
+          settings: {
+            index: {
+              number_of_shards: 4,
+              analysis: {
+                analyzer: {
+                  analyzer_shingle: {
+                    tokenizer: 'icu_tokenizer',
+                    filter: ['filter_shingle'],
+                  },
+                },
+                filter: {
+                  filter_shingle: {
+                    type: 'shingle',
+                    max_shingle_size: 3,
+                    min_shingle_size: 2,
+                    output_unigrams: 'true',
+                  },
+                },
+              },
+            },
+          },
+          mappings: {
+            properties: {
+              fromMis: {
+                properties: {
+                  courseDescriptionThai: {
+                    analyzer: 'analyzer_shingle',
+                    type: 'text',
+                  },
+                  courseNameThai: {
+                    analyzer: 'analyzer_shingle',
+                    type: 'text',
+                  },
+                  facultyName: {
+                    analyzer: 'analyzer_shingle',
+                    type: 'text',
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+
+      /**
        * Push courses to elastic search
        */
-      this.logger.log('Push couses to elastic search', 'InitialCoursesInES')
+      this.logger.log('Push courses to elastic search', 'InitialCoursesInES')
       for (const courseNo of Object.keys(courses)) {
         await this.esClient.index({
           id: courseNo,
@@ -100,13 +155,13 @@ export class SearchService implements OnApplicationBootstrap {
 
   async updateMisCourse(misCourse: MisCourse): Promise<void> {
     await this.esClient.update({
-      index: 'courses', 
+      index: 'courses',
       id: misCourse.courseId,
       body: {
         doc: {
           fromMis: misCourse,
-        } as Partial<CourseResponse['_source']>
-      }
+        } as Partial<CourseResponse['_source']>,
+      },
     })
   }
 }
