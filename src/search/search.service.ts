@@ -164,4 +164,11 @@ export class SearchService implements OnApplicationBootstrap {
       },
     })
   }
+
+  async deleteCourse(courseId: string): Promise<void> {
+    await this.esClient.delete({
+      index: 'courses',
+      id: courseId
+    })
+  }
 }

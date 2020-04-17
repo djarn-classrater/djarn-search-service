@@ -26,9 +26,13 @@ export class SearchController {
     courses = await Promise.all(
       res.map<Promise<CourseResponse>>(async course => {
         if (!course._source.fromMis) {
-          const misCourse = await this.courseService.getCourse(course._id)
-          this.searchService.updateMisCourse(misCourse)
-          course._source.fromMis = misCourse
+          try {
+            const misCourse = await this.courseService.getCourse(course._id)
+            this.searchService.updateMisCourse(misCourse)
+            course._source.fromMis = misCourse
+          } catch (e) {
+            console.log(e) 
+          }
         }
         return course
       }),

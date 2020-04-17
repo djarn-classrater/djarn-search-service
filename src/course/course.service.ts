@@ -1,4 +1,4 @@
-import { Injectable, HttpService } from '@nestjs/common'
+import { Injectable, HttpService, NotFoundException } from '@nestjs/common'
 import { MisCourse } from './course.dto'
 
 @Injectable()
@@ -9,6 +9,10 @@ export class CourseService {
     const { data } = await this.courseClient
       .get<MisCourse>(`/course/${courseId}`)
       .toPromise()
+
+    if (data.courseName === "") {
+      throw new NotFoundException()
+    }
 
     return {
       courseId,
