@@ -10,6 +10,7 @@ import * as _ from 'lodash'
 import * as fs from 'fs'
 import { retryAsync } from 'ts-retry'
 import { SearchResponse, CourseResponse } from './search.dto'
+import { MisCourse } from '../course/course.dto'
 
 @Injectable()
 export class SearchService implements OnApplicationBootstrap {
@@ -95,5 +96,17 @@ export class SearchService implements OnApplicationBootstrap {
       },
     )
     return body.hits.hits
+  }
+
+  async updateMisCourse(misCourse: MisCourse): Promise<void> {
+    await this.esClient.update({
+      index: 'courses', 
+      id: misCourse.courseId,
+      body: {
+        doc: {
+          fromMis: misCourse,
+        } as Partial<CourseResponse['_source']>
+      }
+    })
   }
 }

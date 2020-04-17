@@ -4,6 +4,7 @@ import { HttpModule } from '@nestjs/common'
 import { ElasticsearchModule } from '@nestjs/elasticsearch'
 import { SearchController } from './search.controller'
 import { SearchService } from './search.service'
+import { CourseModule } from '../course/course.module'
 
 describe('Search Controller', () => {
   let controller: SearchController
@@ -20,6 +21,7 @@ describe('Search Controller', () => {
           },
         }),
         ElasticsearchModule.register({ node: 'http://es:9200' }),
+        CourseModule,
       ],
       controllers: [SearchController],
       providers: [SearchService],
@@ -35,5 +37,12 @@ describe('Search Controller', () => {
   it('ping reg cmu service', async () => {
     const res = await controller.ping()
     expect(res).toBeDefined()
+  })
+
+  it('try to search', async () => {
+    const res = await controller.search({query: '261361', size: 5})
+    res.forEach(course => {
+      expect(course._source.fromMis).toBeDefined()
+    })
   })
 })

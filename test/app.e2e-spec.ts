@@ -61,7 +61,10 @@ describe('AppController (e2e)', () => {
   })
 
   it('Try to search', done => {
-    const response: Observable<CourseResponse[]> = client.send('search.query', { query: 'cal', size: 5 })
+    const response: Observable<CourseResponse[]> = client.send('search.query', {
+      query: 'cal',
+      size: 5,
+    })
 
     response.subscribe(data => {
       expect(data.length).toBeLessThanOrEqual(5)

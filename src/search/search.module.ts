@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { ElasticsearchModule } from '@nestjs/elasticsearch'
 import { SearchController } from './search.controller'
 import { SearchService } from './search.service'
+import { CourseModule } from '../course/course.module'
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SearchService } from './search.service'
         password: process.env.REG_PASSWORD,
       },
     }),
+    CourseModule,
   ],
   controllers: [SearchController],
   providers: [SearchService],

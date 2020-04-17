@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config'
 import { ElasticsearchModule } from '@nestjs/elasticsearch'
 import { SearchService } from './search.service'
 import { CourseResponse } from './search.dto'
+import { ResourceType } from '@nestjs/microservices/external/kafka-options.interface'
 
 describe('SearchService', () => {
   let service: SearchService
