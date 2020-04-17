@@ -1,8 +1,9 @@
 import { Controller } from '@nestjs/common'
 import { MessagePattern } from '@nestjs/microservices'
 import { SearchService } from './search.service'
-import { SearchPayload, CourseResponse } from './search.dto'
+import { SearchPayload, CourseResponse, RegCourse } from './search.dto'
 import { CourseService } from '../course/course.service'
+import { MisCourse } from 'src/course/course.dto'
 
 @Controller('search')
 export class SearchController {
@@ -20,15 +21,21 @@ export class SearchController {
   async search({ query, size }: SearchPayload): Promise<CourseResponse[]> {
     const res = await this.searchService.search(query, size)
 
-    const courses = res.map<Promise<CourseResponse>>(async course => {
-      if (!course._source.fromMis) {
-        const misCourse = await this.courseService.getCourse(course._id)
-        this.searchService.updateMisCourse(misCourse)
-        course._source.fromMis = misCourse
-      }
-      return course
-    })
+    let courses: CourseResponse<RegCourse, MisCourse>[]
 
-    return Promise.all(courses)
+    courses = await Promise.all(
+      res.map<Promise<CourseResponse>>(async course => {
+        if (!course._source.fromMis) {
+          const misCourse = await this.courseService.getCourse(course._id)
+          this.searchService.updateMisCourse(misCourse)
+          course._source.fromMis = misCourse
+        }
+        return course
+      }),
+    )
+
+    courses = courses.filter(course => course._source.fromMis !== null)
+
+    return courses
   }
 }
